@@ -12,16 +12,21 @@ export function Form(props) {
 
   const onChange = evt => {
     setValues({...values, 
-    [evt.target.name]: evt.target.value
+    [evt.target.id]: evt.target.value
     });
-    
   }
-
   const onSubmit = evt => {
     evt.preventDefault()
+    console.log(values);
+    const request = {question_text: values.newQuestion, true_answer_text: values.newTrueAnswer, false_answer_text: values.newFalseAnswer}
     // http://localhost:9000/api/quiz/new
     // post request to above 
-    axios.post("http://localhost:9000/api/quiz/new").then(res => console.log(values))
+    axios.post("http://localhost:9000/api/quiz/new", request)
+    .then(res => {
+      console.log(res)
+    }).catch(err => {
+      console.log(err)
+    })
   }
 
   return (

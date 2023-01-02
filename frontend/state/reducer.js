@@ -1,6 +1,7 @@
 // ❗ You don't need to add extra reducers to achieve MVP
 import { combineReducers } from 'redux'
-import { MOVE_CLOCKWISE, MOVE_COUNTERCLOCKWISE } from './action-types'
+import { MOVE_CLOCKWISE, MOVE_COUNTERCLOCKWISE, SET_INFO_MESSAGE, SET_QUIZ_INTO_STATE, SET_SELECTED_ANSWER } from './action-types'
+import axios from 'axios'
 
 // const initialState = {
 //   wheelState: 0,
@@ -34,19 +35,63 @@ function wheel(state = initialWheelState, action) {
   } 
 }
 
-const initialQuizState = null
+const initialQuizState = {
+  question: "What is a closure?",
+  trueAnswer: "A Function",
+  falseAnswer: "An Elephant"
+}
 function quiz(state = initialQuizState, action) {
-  return state
+  switch(action.type) {
+    case SET_QUIZ_INTO_STATE:
+      axios.get('http://localhost:9000/api/quiz/next')
+      .then(res => {
+        return {...state, question: res.question, trueAnswer: res.answers[0].text, falseAnswer: res.answers[1].text}
+      })
+    default:
+    return state
+  }
+  
 }
 
-const initialSelectedAnswerState = null
+const initialSelectedAnswerState = {
+  className: 'select',
+  buttonText: 'select',
+  button2Text: 'select',
+  selected: ''
+}
 function selectedAnswer(state = initialSelectedAnswerState, action) {
-  return state
+  switch(action.type){
+    case SET_SELECTED_ANSWER:
+      console.log(state)
+      if(action.payload.button1 === true){
+        console.log('if')
+        return{...state,button2Text: 'select', buttonText: 'SELECTED', className: 'selected'}
+      }if (action.payload.button2 === true){
+        console.log('else if')
+        return{...state, buttonText: 'select', button2Text: 'SELECTED', className: 'selected'}
+      }
+    default:
+      return state
+  }
+  
 }
 
 const initialMessageState = ''
 function infoMessage(state = initialMessageState, action) {
-  return state
+  switch(action.type){
+    case SET_INFO_MESSAGE:
+      // check all of the logic
+      if (quiz.falseAnswer === true){
+        return state = 'What a shame! That was the incorrect answer'
+      } else if (quiz.trueAnswer === true){
+        return state = 'Nice job! That was the correct answer'
+      } else if (form.newQuestion === true){
+        return state = `Congrats: "${form.newQuestion}" is a great question!`
+      }
+    default:
+      return state
+  }
+  
 }
 
 const initialFormState = {
@@ -55,7 +100,13 @@ const initialFormState = {
   newFalseAnswer: '',
 }
 function form(state = initialFormState, action) {
-  return state
+  switch(action.type){
+    case SET_QUIZ_INTO_STATE:
+      // what else do I add to put quiz into state? Do I need a payload for this action creator?
+      return{...state, }
+    default:
+      return state
+  }
 }
 
 export default combineReducers({ wheel, quiz, selectedAnswer, infoMessage, form })
