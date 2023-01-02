@@ -65,7 +65,7 @@ function selectedAnswer(state = initialSelectedAnswerState, action) {
       console.log(state)
       if(action.payload.button1 === true){
         console.log('if')
-        return{...state,button2Text: 'select', buttonText: 'SELECTED', className: 'selected'}
+        return{...state, button2Text: 'select', buttonText: 'SELECTED', className: 'selected'}
       }if (action.payload.button2 === true){
         console.log('else if')
         return{...state, buttonText: 'select', button2Text: 'SELECTED', className: 'selected'}

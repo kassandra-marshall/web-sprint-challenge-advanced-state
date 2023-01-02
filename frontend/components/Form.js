@@ -1,7 +1,7 @@
 import axios from 'axios'
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
-import * as actionCreators from '../state/action-creators'
+import { setMessage } from '../state/action-creators'
 
 export function Form(props) {
   const [values, setValues] = useState({
@@ -23,7 +23,8 @@ export function Form(props) {
     // post request to above 
     axios.post("http://localhost:9000/api/quiz/new", request)
     .then(res => {
-      console.log(res)
+      setMessage()
+      // figure out why state isn't updating
     }).catch(err => {
       console.log(err)
     })
@@ -40,4 +41,10 @@ export function Form(props) {
   )
 }
 
-export default connect(st => st, actionCreators)(Form)
+const mapStateToProps = state => {
+  return {
+    initialMessageState: state.infoMessage.initialMessageState
+  }
+}
+
+export default connect(mapStateToProps, {setMessage})(Form)
