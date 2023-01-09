@@ -1,7 +1,11 @@
-import { INPUT_CHANGE, MOVE_CLOCKWISE, MOVE_COUNTERCLOCKWISE, SET_INFO_MESSAGE, SET_QUIZ_INTO_STATE, SET_SELECTED_ANSWER } from "./action-types"
+import { INPUT_CHANGE, CLEAR_MESSAGE, MOVE_CLOCKWISE, MOVE_COUNTERCLOCKWISE, RESET_FORM, SET_INFO_MESSAGE, SET_QUIZ_INTO_STATE, SET_SELECTED_ANSWER } from "./action-types"
 import axios from "axios"
 
 // ❗ You don't need to add extra action creators to achieve MVP
+export function isLoading() {
+  return({type: IS_LOADING})
+}
+
 export function moveClockwise() {
   return({type: MOVE_CLOCKWISE})
  
@@ -17,8 +21,10 @@ export function selectAnswer(answer) {
 
 export function setMessage(answer) {
   return({type: SET_INFO_MESSAGE, payload: answer})
-  
-   
+ }
+
+ export function clearMessage() {
+  return({type: CLEAR_MESSAGE})
  }
 
 export function setQuiz(quiz) { 
@@ -28,11 +34,13 @@ export function setQuiz(quiz) {
 
 export function inputChange(evt) {
   // KM: for quiz form
+  console.log('input change')
   return{type: INPUT_CHANGE, payload: evt}
  }
 
 export function resetForm() { 
   // KM: for quiz form
+  return{type: RESET_FORM}
 }
 
 // ❗ Async action creators
@@ -41,9 +49,19 @@ export function fetchQuiz() {
     // First, dispatch an action to reset the quiz state (so the "Loading next quiz..." message can display)
     // On successful GET:
     // - Dispatch an action to send the obtained quiz to its state
+    const loadingQuiz = {
+      quiz_id: null,
+      question: null,
+      answers: [
+        {answer_id: null, text: null},
+        {answer_id: null, text: null}
+      ],
+    }
+    dispatch(setQuiz(loadingQuiz))
     axios.get('http://localhost:9000/api/quiz/next')
       .then(res => 
         {
+          console.log(res.data)
           dispatch(setQuiz(res.data))
         return { 
           quiz_id: res.data.quiz_id, 
@@ -70,7 +88,8 @@ export function postAnswer(request) {
       dispatch(setMessage(res.data.message))})
     .catch(res => {console.log(res.data.message)
       dispatch(setMessage(res.data.message))})
-    dispatch(fetchQuiz())
+      // dispatch(isLoading())
+      dispatch(fetchQuiz())
   }
 }
 export function postQuiz(request) {

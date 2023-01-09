@@ -1,6 +1,6 @@
 // ❗ You don't need to add extra reducers to achieve MVP
 import { combineReducers } from 'redux'
-import { INPUT_CHANGE, MOVE_CLOCKWISE, MOVE_COUNTERCLOCKWISE, SET_INFO_MESSAGE, SET_QUIZ_INTO_STATE, SET_SELECTED_ANSWER } from './action-types'
+import { CLEAR_MESSAGE, INPUT_CHANGE, IS_LOADING, MOVE_CLOCKWISE, MOVE_COUNTERCLOCKWISE, RESET_FORM, SET_INFO_MESSAGE, SET_QUIZ_INTO_STATE, SET_SELECTED_ANSWER } from './action-types'
 
 const initialState = {
   quizState: {
@@ -65,7 +65,6 @@ const initialQuizState = {
 function quiz(state = initialQuizState, action) {
   switch(action.type) {
     case SET_QUIZ_INTO_STATE:
-      console.log(action.payload)
       return({
         ...state,
         quiz_id: action.payload.quiz_id,
@@ -75,6 +74,9 @@ function quiz(state = initialQuizState, action) {
         falseAnswer_id: action.payload.answers[1].answer_id,
         falseAnswer: action.payload.answers[1].text
       })
+      case RESET_FORM:
+        console.log(state)
+        return state
     default:
     return state
   }
@@ -87,13 +89,13 @@ const initialSelectedAnswerState = {
   button2Text: 'Select',
   button1: false,
   button2: false,
-  answerMessage: null,
+  answerMessage: '',
   selectedAnswer: ''
 }
 function selectedAnswer(state = initialSelectedAnswerState, action) {
   switch(action.type){
     case SET_SELECTED_ANSWER:
-      console.log(state)
+      console.log(action.payload)
       if(action.payload.button1 === true){
         return{...state, 
           button2Text: 'Select', 
@@ -101,10 +103,10 @@ function selectedAnswer(state = initialSelectedAnswerState, action) {
           className: 'selected', 
           button1: true, 
           button2: false, 
-          answerMessage: true, 
+          answerMessage: '', 
           selectedAnswer: action.payload.answer_id}
       }else if (action.payload.button2 === true){
-        return{...state, buttonText: 'Select', button2Text: 'SELECTED', className: 'selected', button2: true, button1: false, answerMessage: false, selectedAnswer: action.payload.answer_id}
+        return{...state, buttonText: 'Select', button2Text: 'SELECTED', className: 'selected', button2: true, button1: false, answerMessage: '', selectedAnswer: action.payload.answer_id}
       } else if (action.payload.button1 === false && action.payload.button2 === false){
         return {...state, button1: false, button2: false, buttonText:'Select', button2Text: 'Select', classname: 'select'}
       }
@@ -118,34 +120,16 @@ const initialMessageState = {
   quizState: '',
   quizFormState: ''
 }
-// {
-//   falseAnswerMessage: 'What a shame! That was the incorrect answer',
-//   trueAnswerMessage: 'Nice job! That was the correct answer',
-//   newQuizForm: `Congrats: "${form.newQuestion}" is a great question!`,
-//   noMessage: 'no message'
-// }
 function infoMessage(state = initialMessageState, action) {
   switch(action.type){
     case SET_INFO_MESSAGE:
       console.log(action.payload)
       return {...state, quizState: action.payload}
-      // if (action.payload === 'SELECTED')
-    //   // check all of the logic
-    //   // infoMessage is not connected for some reason
-    //   if (quiz.falseAnswer === true){
-    //     return state.falseAnswerMessage
-    //   } else if (quiz.trueAnswer === true){
-    //     return state.trueAnswerMessage
-    //   // } else if(form.question === true){
-    //   //   return state.newQuizForm
-    //   }else
-    //   {
-    //     return state.noMessage
-    //   }
+    case CLEAR_MESSAGE:
+      return {...state, quizState: ''}
     default:
       return state
   }
-  
 }
 
 const initialFormState = {
@@ -163,7 +147,6 @@ function form(state = initialFormState, action) {
         newFalseAnswer: action.payload.newFalseAnswer
       }
     case SET_QUIZ_INTO_STATE:
-      console.log(action.payload)
       return{...state, 
       newQuestion: action.payload.newQuestion,
       newTrueAnswer: action.payload.newTrueAnswer,
@@ -173,4 +156,12 @@ function form(state = initialFormState, action) {
   }
 }
 
-export default combineReducers({ wheel, quiz, selectedAnswer, infoMessage, form })
+// const initialLoadingState='Loading next quiz...'
+// function loading(state=initialLoadingState, action){
+//   switch(action.type){
+//     case IS_LOADING:
+//       return state
+//   }
+// }
+
+export default combineReducers({ wheel, quiz, selectedAnswer, infoMessage, form, })

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
-import { selectAnswer, fetchQuiz, postAnswer, setQuiz } from '../state/action-creators';
-import { createBrowserHistory } from 'history';
+import { selectAnswer, fetchQuiz, postAnswer, setQuiz, clearMessage } from '../state/action-creators';
 
 // figure out how to persist state when navigating away from page
 
@@ -28,6 +27,7 @@ function Quiz(props) {
       setSelect({
       button2: false, button1: true, answer_id: props.trueAnswer_id})
       setAnswer_id(props.trueAnswer_id)
+      props.clearMessage()
       
       
       
@@ -35,6 +35,7 @@ function Quiz(props) {
         setSelect({
         button1: false, button2: true, answer_id: props.falseAnswer_id})
         setAnswer_id(props.falseAnswer_id)
+        props.clearMessage()
     }
   }
   const onSubmit = (e) => {
@@ -77,14 +78,13 @@ function Quiz(props) {
 
             <button disabled={props.selectedAnswer === '' ? true : false} onClick={onSubmit} id="submitAnswerBtn">Submit answer</button>
           </>
-        ) : <p>Loading next quiz...</p>
+        ) : 'Loading next quiz...'
       }
     </div>
   )
 }
 
 const mapStateToProps = state => {
-  console.log(state)
   return {
    question: state.quiz.question,
    quiz_id: state.quiz.quiz_id,
@@ -105,4 +105,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, {selectAnswer, fetchQuiz, postAnswer, setQuiz})(Quiz)
+export default connect(mapStateToProps, {selectAnswer, fetchQuiz, postAnswer, setQuiz, clearMessage})(Quiz)

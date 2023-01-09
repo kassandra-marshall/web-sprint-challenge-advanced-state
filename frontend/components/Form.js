@@ -8,15 +8,13 @@ export function Form(props) {
     newQuestion: "",
     newTrueAnswer: "",
     newFalseAnswer: ""
-  })
-
-  
+  })  
 
   const onChange = evt => {
     setValues({...values, 
     [evt.target.id]: evt.target.value
     });
-    inputChange(evt.target.value)
+    props.inputChange({...values, [evt.target.id]: evt.target.value})
   }
 
   const onSubmit = evt => {
@@ -36,9 +34,9 @@ export function Form(props) {
   return (
     <form id="form" onSubmit={onSubmit}>
       <h2>Create New Quiz</h2>
-      <input maxLength={50} onChange={onChange} id="newQuestion" placeholder="Enter question" />
-      <input maxLength={50} onChange={onChange} id="newTrueAnswer" placeholder="Enter true answer" />
-      <input maxLength={50} onChange={onChange} id="newFalseAnswer" placeholder="Enter false answer" />
+      <input maxLength={50} value={props.newQuestion} onChange={onChange} id="newQuestion" placeholder="Enter question" />
+      <input maxLength={50} value={props.newTrueAnswer} onChange={onChange} id="newTrueAnswer" placeholder="Enter true answer" />
+      <input maxLength={50} value={props.newFalseAnswer} onChange={onChange} id="newFalseAnswer" placeholder="Enter false answer" />
       <button id="submitNewQuizBtn" disabled={!values.newQuestion.trim() || !values.newTrueAnswer.trim() || !values.newFalseAnswer.trim()}>Submit new quiz</button>
     </form>
   )
@@ -46,7 +44,10 @@ export function Form(props) {
 
 const mapStateToProps = state => {
   return {
-    initialMessageState: state.infoMessage.initialMessageState
+    initialMessageState: state.infoMessage.initialMessageState,
+    newQuestion: state.form.newQuestion,
+    newTrueAnswer: state.form.newTrueAnswer,
+    newFalseAnswer: state.form.newFalseAnswer
   }
 }
 
