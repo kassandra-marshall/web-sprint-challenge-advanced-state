@@ -38,6 +38,7 @@ function Wheel(props) {
 }
 
 const mapStateToProps = state => {
+  console.log(state)
   return{
     // initialWheelState: state.initialWheelState
     // state: state.initialWheelState

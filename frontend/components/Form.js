@@ -1,7 +1,7 @@
 import axios from 'axios'
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
-import { setMessage } from '../state/action-creators'
+import { postQuiz, setMessage } from '../state/action-creators'
 
 export function Form(props) {
   const [values, setValues] = useState({
@@ -9,6 +9,8 @@ export function Form(props) {
     newTrueAnswer: "",
     newFalseAnswer: ""
   })
+
+  
 
   const onChange = evt => {
     setValues({...values, 
@@ -21,14 +23,40 @@ export function Form(props) {
     const request = {question_text: values.newQuestion, true_answer_text: values.newTrueAnswer, false_answer_text: values.newFalseAnswer}
     // http://localhost:9000/api/quiz/new
     // post request to above 
-    axios.post("http://localhost:9000/api/quiz/new", request)
-    .then(res => {
-      setMessage()
-      // figure out why state isn't updating
-    }).catch(err => {
-      console.log(err)
-    })
+    props.postQuiz(request)
+    console.log("submit")
+    const newQuestion = document.querySelector("#newQuestion");
+    newQuestion.value = "";
+    const newTrueAnswer = document.querySelector("#newTrueAnswer");
+    newTrueAnswer.value = "";
+    const newFalseAnswer = document.querySelector("#newFalseAnswer");
+    newFalseAnswer.value= "";
   }
+
+  // function manage () {
+  //   const bt = document.querySelector('#submitNewQuizBtn');
+  //   const ele = document.getElementsByTagName('input');
+
+  //   for (i = 0; i < ele.length; i++){
+  //     if (ele[i].type === 'text' && ele[i].value === ''){
+  //       bt.disabled = true;
+  //       return false;
+  //     }else {
+  //       bt.disabled = false;
+  //     }
+  //   }
+  // }
+
+  // const disabled = () => {
+  //   const newQuestion = document.getElementById('newQuestion');
+  //   const newTrueAnswer = document.getElementById('newTrueAnswer');
+  //   const newFalseAnswer = document.getElementById('newFalseAnswer');
+  //   if (newQuestion === '' || newTrueAnswer === '' || newFalseAnswer === ''){
+  //     return true
+  //   } else{
+  //     return false
+  //   }
+  // }
 
   return (
     <form id="form" onSubmit={onSubmit}>
@@ -36,7 +64,7 @@ export function Form(props) {
       <input maxLength={50} onChange={onChange} id="newQuestion" placeholder="Enter question" />
       <input maxLength={50} onChange={onChange} id="newTrueAnswer" placeholder="Enter true answer" />
       <input maxLength={50} onChange={onChange} id="newFalseAnswer" placeholder="Enter false answer" />
-      <button id="submitNewQuizBtn">Submit new quiz</button>
+      <button id="submitNewQuizBtn" disabled={!values.newQuestion.trim() || !values.newTrueAnswer.trim() || !values.newFalseAnswer.trim()}>Submit new quiz</button>
     </form>
   )
 }
@@ -47,4 +75,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, {setMessage})(Form)
+export default connect(mapStateToProps, {setMessage, postQuiz})(Form)

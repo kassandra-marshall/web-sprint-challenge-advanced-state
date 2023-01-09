@@ -9,7 +9,7 @@ import Message from './Message'
 import Form from './Form'
 
 // REDUX IMPORTS
-import { createStore, applyMiddleware, compose } from 'redux'
+import { legacy_createStore, applyMiddleware, compose } from 'redux'
 import { Provider } from 'react-redux'
 import thunk from 'redux-thunk'
 import reducer from '../state/reducer'
@@ -18,7 +18,7 @@ import reducer from '../state/reducer'
 let store
 export const resetStore = () => {
   const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
-  store = createStore(reducer, composeEnhancers(applyMiddleware(thunk)))
+  store = legacy_createStore(reducer, composeEnhancers(applyMiddleware(thunk)))
 }
 resetStore()
 
