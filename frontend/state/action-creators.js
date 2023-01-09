@@ -1,4 +1,4 @@
-import { MOVE_CLOCKWISE, MOVE_COUNTERCLOCKWISE, SET_INFO_MESSAGE, SET_QUIZ_INTO_STATE, SET_SELECTED_ANSWER } from "./action-types"
+import { INPUT_CHANGE, MOVE_CLOCKWISE, MOVE_COUNTERCLOCKWISE, SET_INFO_MESSAGE, SET_QUIZ_INTO_STATE, SET_SELECTED_ANSWER } from "./action-types"
 import axios from "axios"
 
 // ❗ You don't need to add extra action creators to achieve MVP
@@ -26,8 +26,9 @@ export function setQuiz(quiz) {
   // should I add a payload?
 }
 
-export function inputChange() {
+export function inputChange(quiz) {
   // KM: for quiz form
+  return{type: INPUT_CHANGE, payload: quiz}
  }
 
 export function resetForm() { 
@@ -51,7 +52,7 @@ export function fetchQuiz() {
           trueAnswer: res.data.answers[0].text, 
           falseAnswer_id: res.data.answers[1].answer_id, 
           falseAnswer: res.data.answers[1].text,
-          // selectedAnswer: ''
+          selectedAnswer: ''
         }
       }).catch(err => console.log(err))
   }

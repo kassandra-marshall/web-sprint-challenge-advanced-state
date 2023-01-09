@@ -8,7 +8,8 @@ import { createBrowserHistory } from 'history';
 function Quiz(props) {
   const [select, setSelect] = useState({
     button1: false,
-    button2: false
+    button2: false,
+    answer_id: ''
   })
 
   const [answer_id, setAnswer_id] = useState('')
@@ -18,13 +19,6 @@ function Quiz(props) {
   // }, [])
   
   // setCount(JSON.parse(window.localStorage.getItem('count')));
-
-
-
-  const [selected, setSelected] = useState({
-    button1: 'Select',
-    button2: 'Select'
-  })
 
   // const saveToLocalStorage = (quiz) => {
   //   try {
@@ -53,10 +47,12 @@ function Quiz(props) {
 
 
   useEffect(()=> {
-    props.fetchQuiz()
+    // props.fetchQuiz()
     // window.localStorage.setItem('quiz', quiz)
     // KM: tried using ternary with new answerMessage state but state did not persist
-    {props.answerMessage !== '' ? props.fetchQuiz() : '' }
+    {props.question === '' ? props.fetchQuiz() : '' }
+    
+    
     // KM: tried using new answerMessage state in dependency array but state did not persist
     // KM: maybe try useHistory or localStorage to persist state data
     
@@ -81,17 +77,15 @@ function Quiz(props) {
     e.preventDefault()
     if (e.target.id === `${props.trueAnswer_id}` ){
       setSelect({
-      button2: false, button1: true})
+      button2: false, button1: true, answer_id: props.trueAnswer_id})
       setAnswer_id(props.trueAnswer_id)
-      setSelected({button2: 'Select', button1: 'SELECTED'})
       
       
       
     } else if (e.target.id === `${props.falseAnswer_id}`) {
         setSelect({
-        button1: false, button2: true})
+        button1: false, button2: true, answer_id: props.falseAnswer_id})
         setAnswer_id(props.falseAnswer_id)
-        setSelected({button1: 'Select', button2: 'SELECTED'})
     }
   }
   const onSubmit = (e) => {
@@ -103,10 +97,6 @@ function Quiz(props) {
     setSelect({
       button1: false,
       button2: false
-    })
-    setSelected({
-      button1: 'Select',
-      button2: 'Select'
     })
   }
 
@@ -129,32 +119,31 @@ function Quiz(props) {
             <h2>{props.question}</h2>
 
             <div id="quizAnswers">
-              <div className={`answer ${ select.button1 ? 'selected' : ''}`}>
+              <div className={`answer ${ props.button1 ? 'selected' : ''}`}>
                 {props.trueAnswer}
                 <button id={props.trueAnswer_id} onClick={answerSelected}>
-                {selected.button1}
-                {/* {props.buttonText} */}
+                {props.buttonText}
                 </button>
               </div>
 
-              <div className={`answer ${ select.button2 ? 'selected' : ''}`}>
+              <div className={`answer ${ props.button2 ? 'selected' : ''}`}>
                 {props.falseAnswer}
                 <button id={props.falseAnswer_id} onClick={answerSelected}>
-                  {selected.button2}
-                  {/* {props.button2Text} */}
+                  {props.button2Text}
                 </button>
               </div>
             </div>
 
             <button onClick={onSubmit} id="submitAnswerBtn">Submit answer</button>
           </>
-        ) : 'Loading next quiz...'
+        ) : <p>Loading next quiz...</p>
       }
     </div>
   )
 }
 
 const mapStateToProps = state => {
+  console.log(state)
   return {
    question: state.quiz.question,
    quiz_id: state.quiz.quiz_id,
@@ -164,11 +153,13 @@ const mapStateToProps = state => {
    falseAnswer_id: state.quiz.falseAnswer_id,
    updatedButtonText: state.quiz.updatedButtonText,
    updatedButton2Text: state.quiz.updatedButton2Text,
-   selectedAnswer: state.quiz.selectedAnswer,
+   selectedAnswer: state.selectedAnswer.selectedAnswer,
    answerMessage: state.selectedAnswer.answerMessage,
    buttonText: state.selectedAnswer.buttonText,
    button2Text: state.selectedAnswer.button2Text,
-   className: state.selectedAnswer.className
+   className: state.selectedAnswer.className,
+   button1: state.selectedAnswer.button1,
+   button2: state.selectedAnswer.button2
 
   }
 }

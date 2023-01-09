@@ -61,6 +61,7 @@ const initialQuizState = {
   falseAnswer: '',
   updatedButtonText: 'select',
   updatedButton2Text: 'select',
+  selectedAnswer: ''
 }
 function quiz(state = initialQuizState, action) {
   switch(action.type) {
@@ -83,20 +84,30 @@ function quiz(state = initialQuizState, action) {
 
 const initialSelectedAnswerState = {
   className: 'select',
-  buttonText: 'select',
-  button2Text: 'select',
+  buttonText: 'Select',
+  button2Text: 'Select',
   button1: false,
   button2: false,
-  answerMessage: ''
+  answerMessage: null,
+  selectedAnswer: ''
 }
 function selectedAnswer(state = initialSelectedAnswerState, action) {
   switch(action.type){
     case SET_SELECTED_ANSWER:
       console.log(state)
       if(action.payload.button1 === true){
-        return{...state, button2Text: 'select', buttonText: 'SELECTED', className: 'selected', button1: true, answerMessage: 'Nice job! That was the correct answer'}
+        return{...state, 
+          button2Text: 'Select', 
+          buttonText: 'SELECTED', 
+          className: 'selected', 
+          button1: true, 
+          button2: false, 
+          answerMessage: true, 
+          selectedAnswer: action.payload.answer_id}
       }else if (action.payload.button2 === true){
-        return{...state, buttonText: 'select', button2Text: 'SELECTED', className: 'selected', button2: true, answerMessage: 'What a shame! That was the incorrect answer'}
+        return{...state, buttonText: 'Select', button2Text: 'SELECTED', className: 'selected', button2: true, button1: false, answerMessage: false, selectedAnswer: action.payload.answer_id}
+      } else if (action.payload.button1 === false && action.payload.button2 === false){
+        return {...state, button1: false, button2: false, buttonText:'Select', button2Text: 'Select', classname: 'select'}
       }
     default:
       return state
@@ -146,6 +157,7 @@ const initialFormState = {
 function form(state = initialFormState, action) {
   switch(action.type){
     case SET_QUIZ_INTO_STATE:
+      console.log(action.payload)
       return{...state, 
       newQuestion: action.payload.newQuestion,
       newTrueAnswer: action.payload.newTrueAnswer,
