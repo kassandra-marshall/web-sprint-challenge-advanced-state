@@ -14,60 +14,9 @@ function Quiz(props) {
 
   const [answer_id, setAnswer_id] = useState('')
 
-  // useEffect(() => {
-  //   setSavedQuiz(JSON.parse(window.localStorage.getItem('quiz')))
-  // }, [])
-  
-  // setCount(JSON.parse(window.localStorage.getItem('count')));
-
-  // const saveToLocalStorage = (quiz) => {
-  //   try {
-  //     localStorage.setItem('quiz', JSON.stringify(quiz));
-  //   }catch (e) {
-  //     console.error(e);
-  //   }
-  // };
-
-  // const loadFromLocalStorage = () => {
-  //   try {
-  //     const quizStr = localStorage.getItem('quiz');
-  //     return quizStr ? JSON.parse(quizStr) : undefined;
-  //   }catch (e) {
-  //     console.error(e);
-  //     return undefined;
-  //   }
-  // };
-
-  // const persistedStore = loadFromLocalStorage();
-  // const store = createStore(reducer, persistedStore);
-
-  // store.subscribe(() => {
-  // saveToLocalStorage(store.getState());  
-  //});
-
-
   useEffect(()=> {
-    // props.fetchQuiz()
-    // window.localStorage.setItem('quiz', quiz)
-    // KM: tried using ternary with new answerMessage state but state did not persist
     {props.question === '' ? props.fetchQuiz() : '' }
-    
-    
-    // KM: tried using new answerMessage state in dependency array but state did not persist
-    // KM: maybe try useHistory or localStorage to persist state data
-    
-    // KM: experiment with state here
   }, [])
-
-  // state won't update 
-  // const [quiz, setSavedQuiz] = useState({
-  //   quiz_id: props.quiz_id,
-  //   trueAnswer_id: props.trueAnswer_id,
-  //   falseAnswer_id: props.falseAnswer_id,
-  //   trueAnswer: props.trueAnswer,
-  //   falseAnswer: props.falseAnswer,
-  //   question: props.question
-  // })
   
   useEffect(() => {
     props.selectAnswer(select)
@@ -100,14 +49,6 @@ function Quiz(props) {
     })
   }
 
-  // const disabled = () => {
-  //   if (select.button1 === true || select.button2 === true){
-  //     return false
-  //   }else {
-  //     return true
-  //   }
-  // }
-
   // the submit button stays active but won't submit
 
   return (
@@ -134,7 +75,7 @@ function Quiz(props) {
               </div>
             </div>
 
-            <button onClick={onSubmit} id="submitAnswerBtn">Submit answer</button>
+            <button disabled={props.selectedAnswer === '' ? true : false} onClick={onSubmit} id="submitAnswerBtn">Submit answer</button>
           </>
         ) : <p>Loading next quiz...</p>
       }

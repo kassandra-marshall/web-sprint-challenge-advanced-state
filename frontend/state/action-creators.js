@@ -26,9 +26,9 @@ export function setQuiz(quiz) {
   // should I add a payload?
 }
 
-export function inputChange(quiz) {
+export function inputChange(evt) {
   // KM: for quiz form
-  return{type: INPUT_CHANGE, payload: quiz}
+  return{type: INPUT_CHANGE, payload: evt}
  }
 
 export function resetForm() { 
