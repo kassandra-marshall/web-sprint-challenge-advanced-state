@@ -60,6 +60,8 @@ function Quiz(props) {
     console.log('click')
     const request = {quiz_id: quiz_id, answer_id: selectedAnswer}
     postAnswer(request)
+    // fetchQuiz()
+    
   }
 
   return (

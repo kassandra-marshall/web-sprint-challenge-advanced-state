@@ -1,36 +1,38 @@
 // ❗ You don't need to add extra reducers to achieve MVP
 import { combineReducers } from 'redux'
-import { CLEAR_MESSAGE, INPUT_CHANGE, IS_LOADING, MOVE_CLOCKWISE, MOVE_COUNTERCLOCKWISE, RESET_FORM, SET_INFO_MESSAGE, SET_QUIZ_INTO_STATE, SET_SELECTED_ANSWER } from './action-types'
+import { CLEAR_MESSAGE, INPUT_CHANGE, IS_LOADING, MOVE_CLOCKWISE, MOVE_COUNTERCLOCKWISE, RESET_FORM, SET_FORM_MESSAGE, SET_INFO_MESSAGE, SET_QUIZ_INTO_STATE, SET_SELECTED_ANSWER } from './action-types'
 
-const initialState = {
-  quizState: {
-    quiz_id: '',
-    question: '',
-    trueAnswer_id: '',
-    trueAnswer: '',
-    falseAnswer_id: '',
-    falseAnswer: '',
-    updatedButtonText: 'select',
-    updatedButton2Text: 'select'
-  },
-  selectedAnswerState: {
-    className: 'select',
-    buttonText: 'select',
-    button2Text: 'select',
-    button1: false,
-    button2: false,
-    answerMessage: ''
-  },
-  messageState: {
-    quizState: '',
-    quizFormState: ''
-  },
-  formState: {
-    newQuestion: '',
-    newTrueAnswer: '',
-    newFalseAnswer: '',
-  }
-}
+// const initialState = [
+//   wheelState= 0,
+//   quizState= {
+//     quiz_id: '',
+//     question: '',
+//     trueAnswer_id: '',
+//     trueAnswer: '',
+//     falseAnswer_id: '',
+//     falseAnswer: '',
+//     updatedButtonText: 'select',
+//     updatedButton2Text: 'select'
+//   },
+//     selectAnswerState = {
+//     className: 'select',
+//     buttonText: 'select',
+//     button2Text: 'select',
+//     button1: false,
+//     button2: false,
+//     answerMessage: ''
+//   },
+//   messageState = {
+//     quizState: '',
+//     quizFormState: ''
+//   },
+//   formState = {
+//     newQuestion: '',
+//     newTrueAnswer: '',
+//     newFalseAnswer: '',
+//   }
+// ]
+  
 // consider splitting the state up
 
 const initialWheelState = 0
@@ -95,7 +97,6 @@ const initialSelectedAnswerState = {
 function selectedAnswer(state = initialSelectedAnswerState, action) {
   switch(action.type){
     case SET_SELECTED_ANSWER:
-      console.log(action.payload)
       if(action.payload.button1 === true){
         return{...state, 
           button2Text: 'Select', 
@@ -129,8 +130,7 @@ function selectedAnswer(state = initialSelectedAnswerState, action) {
 }
 
 const initialMessageState = {
-  quizState: '',
-  quizFormState: ''
+  quizState: ''
 }
 function infoMessage(state = initialMessageState, action) {
   switch(action.type){
