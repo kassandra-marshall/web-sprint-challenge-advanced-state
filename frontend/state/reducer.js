@@ -106,9 +106,21 @@ function selectedAnswer(state = initialSelectedAnswerState, action) {
           answerMessage: '', 
           selectedAnswer: action.payload.answer_id}
       }else if (action.payload.button2 === true){
-        return{...state, buttonText: 'Select', button2Text: 'SELECTED', className: 'selected', button2: true, button1: false, answerMessage: '', selectedAnswer: action.payload.answer_id}
+        return{...state, 
+          buttonText: 'Select', 
+          button2Text: 'SELECTED', 
+          className: 'selected', 
+          button2: true, 
+          button1: false, 
+          answerMessage: '', 
+          selectedAnswer: action.payload.answer_id}
       } else if (action.payload.button1 === false && action.payload.button2 === false){
-        return {...state, button1: false, button2: false, buttonText:'Select', button2Text: 'Select', classname: 'select'}
+        return {...state, 
+          button1: false, 
+          button2: false, 
+          buttonText:'Select', 
+          button2Text: 'Select', 
+          classname: 'select'}
       }
     default:
       return state
@@ -139,6 +151,12 @@ const initialFormState = {
 }
 function form(state = initialFormState, action) {
   switch(action.type){
+    case RESET_FORM:
+      return{
+        newQuestion: '',
+        newTrueAnswer: '',
+        newFalseAnswer: ''
+      }
     case INPUT_CHANGE:
       console.log(action.payload)
       return{

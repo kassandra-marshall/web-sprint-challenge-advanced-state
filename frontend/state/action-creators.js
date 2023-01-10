@@ -2,10 +2,6 @@ import { INPUT_CHANGE, CLEAR_MESSAGE, MOVE_CLOCKWISE, MOVE_COUNTERCLOCKWISE, RES
 import axios from "axios"
 
 // ❗ You don't need to add extra action creators to achieve MVP
-export function isLoading() {
-  return({type: IS_LOADING})
-}
-
 export function moveClockwise() {
   return({type: MOVE_CLOCKWISE})
  
@@ -61,7 +57,6 @@ export function fetchQuiz() {
     axios.get('http://localhost:9000/api/quiz/next')
       .then(res => 
         {
-          console.log(res.data)
           dispatch(setQuiz(res.data))
         return { 
           quiz_id: res.data.quiz_id, 
@@ -81,14 +76,17 @@ export function postAnswer(request) {
     // - Dispatch an action to reset the selected answer state
     // - Dispatch an action to set the server message to state
     // - Dispatch the fetching of the next quiz
-    // KM: Submit answer: http://localhost:9000/api/quiz/answer
+    const resetAnswer = {
+      answer_id: "",
+      button1: false,
+      button2: false
+    }
+    dispatch(selectAnswer(resetAnswer))
     axios.post('http://localhost:9000/api/quiz/answer', request)
     .then(res => {
-      console.log(res.data.message)
       dispatch(setMessage(res.data.message))})
     .catch(res => {console.log(res.data.message)
       dispatch(setMessage(res.data.message))})
-      // dispatch(isLoading())
       dispatch(fetchQuiz())
   }
 }
@@ -104,6 +102,7 @@ export function postQuiz(request) {
       console.log(res)
       const formMessage = `Congrats: "${res.data.question}" is a great question!`
       dispatch(setMessage(formMessage))
+      dispatch(resetForm())
     }).catch(err => {
       console.log(err)
     })

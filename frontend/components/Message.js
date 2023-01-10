@@ -5,8 +5,8 @@ import { setMessage } from '../state/action-creators'
 
 
 function Message(props) {
-
-  return <div id="message">{props.quizState}</div>
+  const { quizState } = props
+  return <div id="message">{quizState}</div>
   
 }
 

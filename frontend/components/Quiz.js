@@ -1,82 +1,92 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
-import { selectAnswer, fetchQuiz, postAnswer, setQuiz, clearMessage } from '../state/action-creators';
-
-// figure out how to persist state when navigating away from page
+import { selectAnswer, fetchQuiz, postAnswer, clearMessage } from '../state/action-creators';
 
 function Quiz(props) {
-  const [select, setSelect] = useState({
+  const { 
+    fetchQuiz, 
+    selectAnswer, 
+    clearMessage, 
+    postAnswer, 
+    question, 
+    quiz_id,
+    trueAnswer_id, 
+    falseAnswer_id, 
+    selectedAnswer, 
+    trueAnswer, 
+    falseAnswer, 
+    button1, 
+    button2,
+    buttonText,
+    button2Text
+   } = props
+  const selectInitial = {
     button1: false,
     button2: false,
     answer_id: ''
-  })
-
-  const [answer_id, setAnswer_id] = useState('')
+  }
 
   useEffect(()=> {
-    {props.question === '' ? props.fetchQuiz() : '' }
+    {question === '' ? fetchQuiz() : '' }
   }, [])
   
   useEffect(() => {
-    props.selectAnswer(select)
-  }, [select])
+    selectAnswer(selectInitial)
+  }, [])
  
   const answerSelected = (e) => {
     e.preventDefault()
-    if (e.target.id === `${props.trueAnswer_id}` ){
-      setSelect({
-      button2: false, button1: true, answer_id: props.trueAnswer_id})
-      setAnswer_id(props.trueAnswer_id)
-      props.clearMessage()
-      
-      
-      
-    } else if (e.target.id === `${props.falseAnswer_id}`) {
-        setSelect({
-        button1: false, button2: true, answer_id: props.falseAnswer_id})
-        setAnswer_id(props.falseAnswer_id)
-        props.clearMessage()
+    if (e.target.id === `${trueAnswer_id}` ){
+      const select = {
+        button1: true,
+        button2: false,
+        answer_id: trueAnswer_id
+      }
+      selectAnswer(select)
+      clearMessage()
+
+    } else if (e.target.id === `${falseAnswer_id}`) {
+          const select = {
+            button1: false,
+            button2: true,
+            answer_id: falseAnswer_id
+          }
+          selectAnswer(select)
+          clearMessage()
     }
   }
   const onSubmit = (e) => {
     e.preventDefault()
     console.log('click')
-    const request = {quiz_id: props.quiz_id, answer_id: answer_id}
-    console.log(select)
-    props.postAnswer(request)
-    setSelect({
-      button1: false,
-      button2: false
-    })
+    const request = {quiz_id: quiz_id, answer_id: selectedAnswer}
+    postAnswer(request)
   }
-
-  // the submit button stays active but won't submit
 
   return (
     <div id="wrapper">
       {
         // quiz already in state? Let's use that, otherwise render "Loading next quiz..."
-        props.question ? (
+        question ? (
           <>
-            <h2>{props.question}</h2>
+            <h2>{question}</h2>
 
             <div id="quizAnswers">
-              <div className={`answer ${ props.button1 ? 'selected' : ''}`}>
-                {props.trueAnswer}
-                <button id={props.trueAnswer_id} onClick={answerSelected}>
-                {props.buttonText}
+              <div className={`answer ${ button1 ? 'selected' : ''}`}>
+                {trueAnswer}
+                <button id={trueAnswer_id} onClick={answerSelected}>
+                {buttonText}
                 </button>
               </div>
 
-              <div className={`answer ${ props.button2 ? 'selected' : ''}`}>
-                {props.falseAnswer}
-                <button id={props.falseAnswer_id} onClick={answerSelected}>
-                  {props.button2Text}
+              <div className={`answer ${ button2 ? 'selected' : ''}`}>
+                {falseAnswer}
+                <button id={falseAnswer_id} onClick={answerSelected}>
+                  {button2Text}
                 </button>
               </div>
             </div>
 
-            <button disabled={props.selectedAnswer === '' ? true : false} onClick={onSubmit} id="submitAnswerBtn">Submit answer</button>
+            <button disabled={selectedAnswer === '' ? true : false} onClick={onSubmit} id="submitAnswerBtn">Submit answer</button>
           </>
         ) : 'Loading next quiz...'
       }
@@ -92,17 +102,13 @@ const mapStateToProps = state => {
    trueAnswer_id: state.quiz.trueAnswer_id,
    falseAnswer: state.quiz.falseAnswer,
    falseAnswer_id: state.quiz.falseAnswer_id,
-   updatedButtonText: state.quiz.updatedButtonText,
-   updatedButton2Text: state.quiz.updatedButton2Text,
    selectedAnswer: state.selectedAnswer.selectedAnswer,
-   answerMessage: state.selectedAnswer.answerMessage,
    buttonText: state.selectedAnswer.buttonText,
    button2Text: state.selectedAnswer.button2Text,
-   className: state.selectedAnswer.className,
    button1: state.selectedAnswer.button1,
    button2: state.selectedAnswer.button2
 
   }
 }
 
-export default connect(mapStateToProps, {selectAnswer, fetchQuiz, postAnswer, setQuiz, clearMessage})(Quiz)
+export default connect(mapStateToProps, {selectAnswer, fetchQuiz, postAnswer, clearMessage})(Quiz)
